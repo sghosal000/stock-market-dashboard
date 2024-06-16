@@ -14,7 +14,7 @@ const Dashboard = () => {
 
     const tabs = [
         { name: 'Home', link: '#', icon: 'https://www.svgrepo.com/show/505393/home-1.svg' },
-        { name: 'Search', link: '#', icon: 'https://www.svgrepo.com/show/520926/search-5.svg' },
+        { name: 'Search', link: '#', icon: 'https://www.svgrepo.com/show/532552/search-alt-2.svg' },
         { name: 'Profile', link: '#', icon: 'https://www.svgrepo.com/show/532906/book-open.svg' },
         { name: 'Bookmarks', link: '#', icon: 'https://www.svgrepo.com/show/474018/bookmark.svg' },
         { name: 'Settings', link: '#', icon: 'https://www.svgrepo.com/show/511123/settings-future.svg' },
