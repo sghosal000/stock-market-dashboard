@@ -5,6 +5,7 @@ import Search from '../components/tabs/Search';
 import Profile from '../components/tabs/Profile';
 import Bookmarks from '../components/tabs/Bookmarks';
 import Settings from '../components/tabs/Settings';
+import { HomeIcon, SearchIcon, BookOpenIcon, BookmarkIcon, SettingsIcon } from '../assets/icons';
 
 import useData from '../hooks/useData';
 
@@ -13,11 +14,11 @@ const Dashboard = () => {
     const { activeTab } = useData()
 
     const tabs = [
-        { name: 'Home', link: '#', icon: 'https://www.svgrepo.com/show/505393/home-1.svg' },
-        { name: 'Search', link: '#', icon: 'https://www.svgrepo.com/show/532552/search-alt-2.svg' },
-        { name: 'Profile', link: '#', icon: 'https://www.svgrepo.com/show/532906/book-open.svg' },
-        { name: 'Bookmarks', link: '#', icon: 'https://www.svgrepo.com/show/474018/bookmark.svg' },
-        { name: 'Settings', link: '#', icon: 'https://www.svgrepo.com/show/511123/settings-future.svg' },
+        { name: 'Home', link: '#', icon: HomeIcon },
+        { name: 'Search', link: '#', icon: SearchIcon },
+        { name: 'Profile', link: '#', icon: BookOpenIcon },
+        { name: 'Bookmarks', link: '#', icon: BookmarkIcon },
+        { name: 'Settings', link: '#', icon: SettingsIcon },
     ]
 
     const render = (activeTab) => {

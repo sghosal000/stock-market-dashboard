@@ -1,4 +1,5 @@
 import React from 'react';
+import { Compass, SearchIcon } from '../assets/icons';
 
 const Header = () => {
     const getCurrentDate = () => {
@@ -18,19 +19,19 @@ const Header = () => {
             <div className='flex space-x-4'>
                 <div className='w-auto h-auto p-2 px-4 rounded-full bg-base-lighter highlight-white'>
                     <a href="#" className='flex items-center space-x-2'>
-                        <img src="https://www.svgrepo.com/show/502593/compass.svg" alt="explore" className='h-4 invert' />
+                        <Compass className="h-4 stroke-2 stroke-txt" />
                         <p className='text-xs'>For you</p>
                     </a>
                 </div>
                 <div className='w-auto h-auto p-2 px-4 rounded-full bg-base-lighter highlight-white'>
                     <a href="#" className='flex items-center space-x-2'>
-                        <img src="https://www.svgrepo.com/show/521515/board-chart.svg" alt="screen" className='h-4 invert' />
+                        <img src="https://www.svgrepo.com/show/358000/meeting-board.svg" alt="screen" className='h-4 invert' />
                         <p className='text-xs'>Screener</p>
                     </a>
                 </div>
                 <div className='w-auto h-auto p-2 rounded-full bg-base-lighter highlight-white'>
                     <a href="#" className='flex items-center space-x-2'>
-                        <img src="https://www.svgrepo.com/show/532552/search-alt-2.svg" alt="search" className='h-4 invert' />
+                        <SearchIcon className='h-4 stroke-2 stroke-txt' />
                     </a>
                 </div>
             </div>

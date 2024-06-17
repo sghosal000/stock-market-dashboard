@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .highlight-white {
-	@apply shadow-lg border-t border-[#ffffff0d]
+	@apply shadow-lg border-t border-[#ffffff10]
 }
 
 .background{

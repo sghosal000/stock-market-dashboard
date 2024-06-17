@@ -19,7 +19,7 @@ export const processIntradayData = (data, mode) => {
     } else if (mode === '1M') {
         const today = new Date(latestDate)
         const oneMonthAgo = new Date(today)
-        oneMonthAgo.setDate(today.getMonth() - 1)
+        oneMonthAgo.setMonth(today.getMonth() - 1)
 
         filteredData = Object.entries(timeSeries)
             .filter(([datetime]) => {

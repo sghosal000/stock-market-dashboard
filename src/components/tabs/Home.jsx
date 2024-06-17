@@ -10,7 +10,7 @@ const Home = () => {
     return (
         <div className='w-10/12 mx-auto text-txt'>
             <Header />
-            <div className='w-full py-10 flex flex-col space-y-10'>
+            <div className='w-full py-10 flex flex-col space-y-6'>
                 <div className='flex flex-col md:flex-row justify-between'>
                     <div className='w-5/12'>
                         <MarketSummary />

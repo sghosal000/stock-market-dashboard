@@ -142,9 +142,9 @@ const MarketsOverview = () => {
                                 <span className='font-semibold'>{name}</span>
                             </div>
                             <div className='w-1/2 flex justify-between'>
-                                <span className='w-1/3 text-center'>{parse(data['05. price'])}</span>
-                                <span className={`w-1/3 text-center ${data['09. change'] >= 0 ? 'text-light-green' : 'text-light-red'}`}>{parse(data['09. change'])}</span>
-                                <span className={`w-1/3 text-center rounded-lg ${data['09. change'] >= 0 ? 'text-light-green bg-light-green/10' : 'text-light-red bg-light-red/10'}`}>{parse(data['10. change percent'])}</span>
+                                <span className='w-3/12 text-right'>{parse(data['05. price'])}</span>
+                                <span className={`w-3/12 text-right ${data['09. change'] >= 0 ? 'text-light-green' : 'text-light-red'}`}>{data['09. change'] > 0? '+': ''}{parse(data['09. change'])}</span>
+                                <span className={`w-4/12 text-center rounded-lg ${data['09. change'] >= 0 ? 'text-light-green bg-light-green/10' : 'text-light-red bg-light-red/10'}`}>{parse(data['10. change percent']) > 0? '+': ''}{parse(data['10. change percent'])}%</span>
                             </div>
                         </div>
                     ))
@@ -171,16 +171,16 @@ const MarketsOverview = () => {
                 <div className="w-full h-auto">
                     <LineChart data={indexData} />
                 </div>
-                <div className='flex justify-between pt-2 text-xs border-t-2 border-base-lighter'>
+                <div className='flex justify-between text-xs border-t-2 border-base-lighter'>
                     <div className='flex space-x-2'>
                         {
                             frames.map((frame, index) => (
-                                <span key={index} onClick={() => setSelectedFrame(frame)} className={`p-1 cursor-pointer ${frame === selectedFrame ? 'text-txt font-bold' : 'text-txt-depressed font-semibold'}`}>{frame}</span>
+                                <span key={index} onClick={() => setSelectedFrame(frame)} className={`p-1 cursor-pointer ${frame === selectedFrame ? 'text-txt font-bold border-t border-accent' : 'text-txt-depressed font-semibold'}`}>{frame}</span>
                             ))
                         }
                     </div>
-                    <div>
-                        <span className='p=1 text-txt-depressed'>US markets open</span>
+                    <div className='p-1'>
+                        <span className='text-txt-depressed'>US markets open</span>
                     </div>
                 </div>
                 {/* <div className='flex space-x-2'>

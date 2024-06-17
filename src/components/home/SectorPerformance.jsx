@@ -68,7 +68,7 @@ const SectorPerformance = () => {
                         sortedSectorData.slice(0, 5).map(([sector, value], index) => (
                             <div key={index} className={`flex justify-between py-1 pr-4 rounded-lg text-sm border-b border-base-lighter bg-gradient-to-r from-base from-80% ${value >= 0 ? 'to-light-green/20' : 'to-light-red/20'}`}>
                                 <span className='text-txt-depressed'>{sector}</span>
-                                <span className={value >= 0 ? 'text-light-green' : 'text-light-red'}>{value}</span>
+                                <span className={value >= 0 ? 'text-light-green' : 'text-light-red'}>{value>0? '+': ''}{value}</span>
                             </div>
                         ))
                     }
