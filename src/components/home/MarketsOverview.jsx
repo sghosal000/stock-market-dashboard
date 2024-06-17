@@ -99,7 +99,7 @@ const MarketsOverview = () => {
             // api fetch limit will exceed for multiple request
             // const res = await axios.get(``);
             // setIndexData(res.data);
-            
+
             if (['1D', '1W', '1M'].includes(selectedFrame)) {
                 setIndexData(processIntradayData(testSPYIntraday, selectedFrame));
             } else {
@@ -168,16 +168,28 @@ const MarketsOverview = () => {
                         </div>
                     </div>
                 </div>
-				<div className="w-full h-auto">
+                <div className="w-full h-auto">
                     <LineChart data={indexData} />
                 </div>
-                <div className='flex space-x-2'>
+                <div className='flex justify-between pt-2 text-xs border-t-2 border-base-lighter'>
+                    <div className='flex space-x-2'>
+                        {
+                            frames.map((frame, index) => (
+                                <span key={index} onClick={() => setSelectedFrame(frame)} className={`p-1 cursor-pointer ${frame === selectedFrame ? 'text-txt font-bold' : 'text-txt-depressed font-semibold'}`}>{frame}</span>
+                            ))
+                        }
+                    </div>
+                    <div>
+                        <span className='p=1 text-txt-depressed'>US markets open</span>
+                    </div>
+                </div>
+                {/* <div className='flex space-x-2'>
                     {
                         frames.map((frame, index) => (
                             <span key={index} onClick={() => setSelectedFrame(frame)} className={`p-1 px-3 text-xs bg-base-lighter rounded-full highlight-white cursor-pointer ${frame === selectedFrame? 'text-txt': 'text-txt-depressed'}`}>{frame}</span>
                         ))
                     }
-                </div>
+                </div> */}
             </div>
         </div>
     )
