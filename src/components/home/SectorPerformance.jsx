@@ -60,7 +60,7 @@ const SectorPerformance = () => {
             </div>
             <div className='flex space-x-10 pt-4'>
                 <div className='w-1/2 h-full flex flex-col justify-around'>
-                    <div className={`flex justify-between py-1 pr-4 rounded-lg text-sm border-b border-base-lighter bg-gradient-to-r from-base from-80% ${allSectorsVal >= 0 ? 'to-light-green/20' : 'to-light-red/20'}`}>
+                    <div className={`flex justify-between py-1 pr-4 rounded-lg text-sm border-b border-base-lighter`}>
                         <span className='border-b-2 border-accent'>All sectors</span>
                         <span>{allSectorsVal}</span>
                     </div>
@@ -68,7 +68,7 @@ const SectorPerformance = () => {
                         sortedSectorData.slice(0, 5).map(([sector, value], index) => (
                             <div key={index} className={`flex justify-between py-1 pr-4 rounded-lg text-sm border-b border-base-lighter bg-gradient-to-r from-base from-80% ${value >= 0 ? 'to-light-green/20' : 'to-light-red/20'}`}>
                                 <span className='text-txt-depressed'>{sector}</span>
-                                <span className={value >= 0 ? 'text-light-green' : 'text-red-400/80'}>{value}</span>
+                                <span className={value >= 0 ? 'text-light-green' : 'text-light-red'}>{value}</span>
                             </div>
                         ))
                     }
@@ -78,7 +78,7 @@ const SectorPerformance = () => {
                         sortedSectorData.slice(5).map(([sector, value], index) => (
                             <div key={index} className={`flex justify-between py-1 pr-4 rounded-lg text-sm border-b border-base-lighter bg-gradient-to-r from-base from-80% ${value >= 0 ? 'to-light-green/20' : 'to-light-red/20'}`}>
                                 <span className='text-txt-depressed'>{sector}</span>
-                                <span className={value >= 0 ? 'text-light-green' : 'text-red-400/80'}>{value}</span>
+                                <span className={value >= 0 ? 'text-light-green' : 'text-light-red'}>{value}</span>
                             </div>
                         ))
                     }

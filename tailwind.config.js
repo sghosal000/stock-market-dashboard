@@ -20,7 +20,7 @@ export default {
 				txt: "#e2e8f0",				// for normal texts
 				"txt-depressed": "#94a3b8", // for depressed texts
 				danger: "#ef4444",			// for delete functionalities
-				"light-red": "#682d3b",
+				"light-red": "#f87171cc",
 				"light-green": "#599d88",
 				"light-cyan": "#67e8f9"
 			},

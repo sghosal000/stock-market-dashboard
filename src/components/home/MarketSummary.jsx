@@ -31,17 +31,19 @@ const MarketSummary = () => {
 
     return (
         <div className='w-full h-full p-8 flex flex-col justify-between bg-base rounded-lg highlight-white'>
-            <div className='flex space-x-4'>
-                <div className='flex items-center p-1 px-4 rounded-full bg-base-lighter highlight-white'>
+            <div className='flex space-x-2'>
+                <div className='flex items-center p-0.5 px-4 rounded-full bg-base-lighter highlight-white'>
                     <p className='w-auto'>The markets are <span className='text-light-green'>bullish</span></p>
                 </div>
-                <div className='flex items-center p-1 px-2 rounded-full bg-base-lighter highlight-white'>
+                <div className='flex items-center p-0.5 px-1.5 rounded-full bg-base-lighter highlight-white'>
                     <img src="https://www.svgrepo.com/show/533642/arrow-up-right.svg" alt="up" className='h-4 invert' />
                 </div>
             </div>
             <div>
                 <p className='text-xs text-txt-depressed'>What you need to know today</p>
-                <p className='text-lg font-bold'>'Someone played this beautifully': Why one expert is suspicious of the latest meme-stock revival</p>
+                <a href="https://markets.businessinsider.com/news/stocks/meme-stock-explosion-suspicious-option-trading-activity-gamestop-amc-gme-2024-5" className='text-lg font-bold'>
+                    'Someone played this beautifully': Why one expert is suspicious of the latest meme-stock revival
+                </a>
             </div>
         </div>
     );
