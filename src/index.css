@@ -11,5 +11,9 @@
 }
 
 .nav-border{
-  @apply bg-gradient-to-b from-base1 from-20% via-stone-700 to-base1 to-80%
+  @apply bg-gradient-to-r sm:bg-gradient-to-b from-base1 from-20% via-stone-700 to-base1 to-80%
+}
+
+.raise{
+	@apply hover:drop-shadow-lg hover:scale-101 origin-bottom transition ease-in-out delay-100 duration-500
 }

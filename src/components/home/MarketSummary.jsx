@@ -31,7 +31,7 @@ const MarketSummary = () => {
     // }, [activeTab]);
 
     return (
-        <div className='w-full h-full p-8 flex flex-col justify-between rounded-lg highlight-white bg-gradient-to-br from-light-green/10 to-40% to-base'>
+        <div className='w-full h-60 md:h-full p-4 md:p-8 flex flex-col justify-between rounded-lg highlight-white bg-gradient-to-br from-light-green/10 to-40% to-base'>
             <div className='flex space-x-2'>
                 <div className='flex items-center p-0.5 px-4 rounded-full bg-base-lighter highlight-white'>
                     <p className='w-auto'>The markets are <span className='text-light-green'>bullish</span></p>

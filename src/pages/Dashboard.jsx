@@ -41,7 +41,7 @@ const Dashboard = () => {
     return (
         <div className="background text-txt">
             <TabNavigation tabs={tabs} />
-            <div className='pl-14'>
+            <div className='pb-14 md:pb-0 md:pl-14'>
                 {render(activeTab)}
             </div>
         </div>

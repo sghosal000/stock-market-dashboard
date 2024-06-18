@@ -53,13 +53,13 @@ const SectorPerformance = () => {
     const sortedSectorData = Object.entries(sectorData).sort(([, a], [, b]) => b - a);
 
     return (
-        <div className='w-full h-auto p-8 flex flex-col justify-between bg-base rounded-lg  highlight-white'>
+        <div className='w-full h-auto p-4 md:p-8 flex flex-col justify-between bg-base rounded-lg  highlight-white'>
             <div className='flex justify-between'>
                 <span className='font-bold'>Sector performance</span>
                 <span className='text-xs text-txt-depressed'>% price change</span>
             </div>
             <div className='flex space-x-10 pt-4'>
-                <div className='w-1/2 h-full flex flex-col justify-around'>
+                <div className='w-1/2 h-auto flex flex-col justify-around'>
                     <div className={`flex justify-between py-1 pr-4 rounded-lg text-sm border-b border-base-lighter`}>
                         <span className='border-b-2 border-accent'>All sectors</span>
                         <span>{allSectorsVal}</span>
@@ -73,7 +73,7 @@ const SectorPerformance = () => {
                         ))
                     }
                 </div>
-                <div className='w-1/2 h-full flex flex-col justify-around'>
+                <div className='w-1/2 h-auto flex flex-col justify-around'>
                     {
                         sortedSectorData.slice(5).map(([sector, value], index) => (
                             <div key={index} className={`flex justify-between py-1 pr-4 rounded-lg text-sm border-b border-base-lighter bg-gradient-to-r from-base from-80% ${value >= 0 ? 'to-light-green/20' : 'to-light-red/20'}`}>

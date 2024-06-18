@@ -40,6 +40,10 @@ export default {
 			// 	"light-cyan": "#67e8f9"
 			// },
 
+			scale: {
+				101: '1.01'
+			},
+
 			backgroundImage: {
 
 			}

@@ -132,12 +132,12 @@ const MarketsOverview = () => {
     // console.log(indexData);
 
     return (
-        <div className='w-full h-auto p-8 flex justify-between bg-base rounded-lg highlight-white'>
-            <div className='w-5/12 h-auto'>
+        <div className='w-full h-auto p-4 md:p-8 flex flex-col md:flex-row justify-between bg-base rounded-lg highlight-white'>
+            <div className='w-full md:w-5/12 h-auto'>
                 {/* overview of all indexes (selectable) */}
                 {
                     indicesData.map(({ name, data }, index) => (
-                        <div key={index} onClick={() => setSelectedIndex(index)} className={`flex justify-between p-1.5 text-sm cursor-pointer ${name === indices[selectedIndex].index ? 'rounded-lg bg-base-lighter' : 'border-b border-base-lighter'}`}>
+                        <div key={index} onClick={() => setSelectedIndex(index)} className={`flex justify-between p-1.5 text-sm cursor-pointer hover:bg-base-lighter/50 hover:rounded-lg hover:border-base hover:text-txt-depressed transition-all ${name === indices[selectedIndex].index ? 'rounded-lg bg-base-lighter' : 'border-b border-base-lighter'}`}>
                             <div className='w-1/2'>
                                 <span className='font-semibold'>{name}</span>
                             </div>
@@ -150,14 +150,14 @@ const MarketsOverview = () => {
                     ))
                 }
             </div>
-            <div className='w-6/12 h-auto flex flex-col justify-between'>
+            <div className='w-full md:w-6/12 h-auto flex flex-col justify-between pt-6 md:pt-0'>
                 {/* header index name, value */}
                 <div className='flex justify-between'>
                     <div>
                         <p className='font-bold'>{`${indices[selectedIndex].name} >`}</p>
                         <span className='text-sm text-txt-depressed'>{parse(indicesData[selectedIndex].data['05. price'])}</span>
                     </div>
-                    <div className='flex space-x-4 items-start'>
+                    <div className='w-4/12 md:w-auto flex flex-col md:flex-row md:space-x-4 items-start'>
                         <div className='flex items-center space-x-1'>
                             <span className='inline-block p-1 m-1 rounded-full bg-txt highlight-white'></span>
                             <span className='text-xs text-txt-depressed'>{indices[selectedIndex].index}</span>
@@ -175,7 +175,7 @@ const MarketsOverview = () => {
                     <div className='flex space-x-2'>
                         {
                             frames.map((frame, index) => (
-                                <span key={index} onClick={() => setSelectedFrame(frame)} className={`p-1 cursor-pointer ${frame === selectedFrame ? 'text-txt font-bold border-t border-accent' : 'text-txt-depressed font-semibold'}`}>{frame}</span>
+                                <span key={index} onClick={() => setSelectedFrame(frame)} className={`p-1 cursor-pointer hover:text-txt transition-all ${frame === selectedFrame ? 'text-txt font-bold border-t border-accent' : 'text-txt-depressed font-semibold'}`}>{frame}</span>
                             ))
                         }
                     </div>
