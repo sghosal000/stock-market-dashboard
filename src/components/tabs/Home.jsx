@@ -21,9 +21,7 @@ const Home = () => {
                 </div>
                 <div>
                     <p className='py-4 text-txt-depressed font-bold'>Markets</p>
-                    <div className='raise'>
-                        <MarketsOverview />
-                    </div>
+                    <MarketsOverview />
                 </div>
             </div>
         </div>

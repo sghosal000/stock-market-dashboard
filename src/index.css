@@ -17,3 +17,7 @@
 .raise{
 	@apply hover:drop-shadow-lg hover:scale-101 origin-bottom transition ease-in-out delay-100 duration-500
 }
+
+.loading{
+	@apply bg-base-lighter rounded-full
+}

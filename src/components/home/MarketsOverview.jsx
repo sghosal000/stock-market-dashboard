@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from 'react'
 import axios from '../../api/axios';
 import useData from '../../hooks/useData';
-
-import { processIntradayData } from '../../utils/processData';
-import { testIndicesData, testSPYIntraday, testSPYDaily } from '../charts/data';
-
+import { processData } from '../../utils/processData';
 import LineChart from '../charts/LineChart';
+
+import LoadingMarketsOverview from '../loading/LoadingMarketsOverview';
+
+import { testIndicesData, testSPYIntraday, testSPYDaily } from '../charts/data/data';
 
 const MarketsOverview = () => {
     const apikey = import.meta.env.VITE_API_KEY
+    const apikey1 = import.meta.env.VITE_API_KEY1
 
     const indices = [
         {
             index: 'S&P 500',
             name: 'SPDR S&P 500 ETF Trust',
-            symbol: 'SPY'
+            symbol: 'SPY',
         },
         {
             index: 'Nasdaq',
@@ -53,17 +55,26 @@ const MarketsOverview = () => {
         }
     ]
 
-    const frames = ['1D', '1W', '1M', '3M', '1Y', 'ALL']
+    const frames = ['1D', '1W', '1M', '3M', '1Y', '5Y', 'ALL']
 
     const { activeTab } = useData()
 
     const [selectedIndex, setSelectedIndex] = useState(0)
     const [selectedFrame, setSelectedFrame] = useState('1D')
 
+    // stores current Index data only
     const [indicesData, setIndicesData] = useState([])
+    // stores intraday time series data raw
+    const [indexDataINtraday, setIndexDataIntraday] = useState([])
+    // stores daily time series data raw
+    const [indexDataDaily, setIndexDataDaily] = useState([])
+    // stores processed time series data, processed as per time frame selected
     const [indexData, setIndexData] = useState([])
 
-    const [loading, setLoading] = useState(false)
+    const [marketStatus, setMarketStatus] = useState('')
+
+    const [loading, setLoading] = useState(true)
+    const [dataLoaded, setDataLoaded] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
 
     const parse = (data) => parseFloat(data).toFixed(2)
@@ -73,9 +84,25 @@ const MarketsOverview = () => {
 
         try {
             // api fetch limit will exceed for multiple request
-            // const fetchPromises = indices.map(async ([indexName, symbol]) => {
-            //     const res = await axios.get(`/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${apikey}`);
-            //     return { name: indexName, data: res.data['Global Quote'] }
+            // const fetchPromises = indices.map(async ({ index, symbol }) => {
+            //     if (['XAUUSD', 'XAGUSD'].includes(symbol)) {
+            //         const res = await axios.get(`/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${apikey}`);
+            //         return { name: index, data: res.data['Global Quote'] }
+            //     }
+            //     const res = await axios.get(`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${apikey1}`);
+            //     res.data['Global Quote'] = {
+            //         "01. symbol": symbol,
+            //         "02. open": res.data.o,
+            //         "03. high": res.data.h,
+            //         "04. low": res.data.l,
+            //         "05. price": res.data.c,
+            //         "06. volume": "660",
+            //         "07. latest trading day": "",
+            //         "08. previous close": res.data.pc,
+            //         "09. change": res.data.d,
+            //         "10. change percent": res.data.dp
+            //     }
+            //     return { name: index, data: res.data['Global Quote'] }
             // })
 
             // const results = await Promise.all(fetchPromises)
@@ -88,48 +115,70 @@ const MarketsOverview = () => {
             console.error(error);
             setErrorMessage("Error Loading Data. Please try again later...");
         } finally {
-            setLoading(false);
+            setLoading(false)
         }
     }
 
-    const fetchIndexData = async () => {
-        setLoading(true);
+    const fetchIndexData = async (symbol) => {
+        // setLoading(true)
+        setDataLoaded(false)
 
         try {
             // api fetch limit will exceed for multiple request
-            // const res = await axios.get(``);
-            // setIndexData(res.data);
+            // const resIntraday = await axios.get(`/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=5min&outputsize=full&apikey=${apikey}`);
+            // setIndexDataIntraday(resIntraday.data);
+            // console.log(resIntraday.data);
+            // const resDaily = await axios.get(`/query?function=TIME_SERIES_DAILY&symbol=${symbol}&outputsize=full&apikey=${apikey}`);
+            // setIndexDataDaily(resDaily.data);
 
-            if (['1D', '1W', '1M'].includes(selectedFrame)) {
-                setIndexData(processIntradayData(testSPYIntraday, selectedFrame));
-            } else {
-                setIndexData(testSPYDaily);
-            }
+            setIndexDataIntraday(testSPYIntraday)
+            setIndexDataDaily(testSPYDaily)
 
+            const resMarketStatus = await axios.get(`https://finnhub.io/api/v1/stock/market-status?exchange=US&token=${apikey1}`)
+            setMarketStatus(resMarketStatus.data)
         } catch (error) {
             console.error(error);
             setErrorMessage("Error Loading Data. Please try again later...");
         } finally {
-            setLoading(false);
+            setLoading(false)
+            setDataLoaded(true)
         }
     };
 
     useEffect(() => {
-        fetchIndicesData();
+        fetchIndicesData()
     }, [activeTab]);
 
+    // when an index is selected corresponding time series data is loaded
     useEffect(() => {
-        fetchIndexData();
-    }, [activeTab, selectedIndex, selectedFrame]);
+        fetchIndexData(indices[selectedIndex].symbol)
+    }, [activeTab, selectedIndex])
+
+    // when a timeframe is selected the corressponding data is procssed to be rendered
+    useEffect(() => {
+        try {
+            if (dataLoaded) {
+                if (['1D', '1W', '1M'].includes(selectedFrame)) {
+                    setIndexData(processData(indexDataINtraday, selectedFrame))
+                } else {
+                    setIndexData(processData(indexDataDaily, selectedFrame))
+                }
+            }
+        } catch (error) {
+            console.error(error)
+            setErrorMessage("Error processing data.. Please try again later...")
+        }
+    }, [activeTab, selectedFrame, dataLoaded])
+
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <LoadingMarketsOverview />;
     }
 
-    if (indicesData.length === 0) {
-        return <div>No data available</div>;
+    if (errorMessage) {
+        return <div>{errorMessage}</div>;
     }
-    // console.log(indexData);
+
 
     return (
         <div className='w-full h-auto p-4 md:p-8 flex flex-col md:flex-row justify-between bg-base rounded-lg highlight-white'>
@@ -137,14 +186,14 @@ const MarketsOverview = () => {
                 {/* overview of all indexes (selectable) */}
                 {
                     indicesData.map(({ name, data }, index) => (
-                        <div key={index} onClick={() => setSelectedIndex(index)} className={`flex justify-between p-1.5 text-sm cursor-pointer hover:bg-base-lighter/50 hover:rounded-lg hover:border-base hover:text-txt-depressed transition-all ${name === indices[selectedIndex].index ? 'rounded-lg bg-base-lighter' : 'border-b border-base-lighter'}`}>
+                        <div key={index} onClick={() => setSelectedIndex(index)} className={`flex justify-between p-1.5 text-sm cursor-pointer hover:bg-base-lighter/50 hover:rounded-lg hover:border-base hover:text-txt-depressed ${name === indices[selectedIndex].index ? 'rounded-lg bg-base-lighter' : 'border-b border-base-lighter'}`}>
                             <div className='w-1/2'>
                                 <span className='font-semibold'>{name}</span>
                             </div>
                             <div className='w-1/2 flex justify-between'>
                                 <span className='w-3/12 text-right'>{parse(data['05. price'])}</span>
-                                <span className={`w-3/12 text-right ${data['09. change'] >= 0 ? 'text-light-green' : 'text-light-red'}`}>{data['09. change'] > 0? '+': ''}{parse(data['09. change'])}</span>
-                                <span className={`w-4/12 text-center rounded-lg ${data['09. change'] >= 0 ? 'text-light-green bg-light-green/10' : 'text-light-red bg-light-red/10'}`}>{parse(data['10. change percent']) > 0? '+': ''}{parse(data['10. change percent'])}%</span>
+                                <span className={`w-3/12 text-right ${data['09. change'] >= 0 ? 'text-light-green' : 'text-light-red'}`}>{data['09. change'] > 0 ? '+' : ''}{parse(data['09. change'])}</span>
+                                <span className={`w-4/12 text-center rounded-lg ${data['09. change'] >= 0 ? 'text-light-green bg-light-green/10' : 'text-light-red bg-light-red/10'}`}>{parse(data['10. change percent']) > 0 ? '+' : ''}{parse(data['10. change percent'])}%</span>
                             </div>
                         </div>
                     ))
@@ -180,16 +229,9 @@ const MarketsOverview = () => {
                         }
                     </div>
                     <div className='p-1'>
-                        <span className='text-txt-depressed'>US markets open</span>
+                        <span className='text-txt-depressed'>{marketStatus.exchange} markets {marketStatus.isOpen ? 'open' : 'close'}</span>
                     </div>
                 </div>
-                {/* <div className='flex space-x-2'>
-                    {
-                        frames.map((frame, index) => (
-                            <span key={index} onClick={() => setSelectedFrame(frame)} className={`p-1 px-3 text-xs bg-base-lighter rounded-full highlight-white cursor-pointer ${frame === selectedFrame? 'text-txt': 'text-txt-depressed'}`}>{frame}</span>
-                        ))
-                    }
-                </div> */}
             </div>
         </div>
     )

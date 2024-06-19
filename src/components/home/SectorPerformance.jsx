@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react'
 import axios from '../../api/axios'
 import useData from '../../hooks/useData'
 
+import LoadingSectorPerformance from '../loading/LoadingSectorPerformance'
+
 const SectorPerformance = () => {
     const { activeTab } = useData()
 
     const [sectorData, setSectorData] = useState('')
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
     const [errorMessage, setErrorMessage] = useState('')
 
     let testData = {
@@ -31,13 +33,14 @@ const SectorPerformance = () => {
     const allSectorsVal = calculateAverage(Object.values(testData))
 
     const fetchData = async () => {
-        const randInd = Math.floor(Math.random() * 10)
         setLoading(true)
 
         try {
-            const res = await axios.get('')
-            setSectorData(res.data.feed)
-            console.log(res.data);
+            // need different logic to create sector wise data.. no api endpoint available
+            // const res = await axios.get('')
+            // setSectorData(res.data.feed)
+
+            setSectorData(testData)
         } catch (error) {
             console.error(error)
             setErrorMessage("Error Loading Data. Please try again later...")
@@ -47,10 +50,18 @@ const SectorPerformance = () => {
     }
 
     useEffect(() => {
-        setSectorData(testData)
+        fetchData()
     }, [activeTab])
 
     const sortedSectorData = Object.entries(sectorData).sort(([, a], [, b]) => b - a);
+
+    if (loading) {
+        return <LoadingSectorPerformance />;
+    }
+
+    if (errorMessage) {
+        return <div>{errorMessage}</div>;
+    }
 
     return (
         <div className='w-full h-auto p-4 md:p-8 flex flex-col justify-between bg-base rounded-lg  highlight-white'>
