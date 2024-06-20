@@ -74,6 +74,7 @@ const MarketsOverview = () => {
     const [marketStatus, setMarketStatus] = useState('')
 
     const [loading, setLoading] = useState(true)
+    const [loadingChart, setLoadingChart] = useState(true)
     const [dataLoaded, setDataLoaded] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
 
@@ -83,34 +84,38 @@ const MarketsOverview = () => {
         setLoading(true)
 
         try {
-            // api fetch limit will exceed for multiple request
-            // const fetchPromises = indices.map(async ({ index, symbol }) => {
-            //     if (['XAUUSD', 'XAGUSD'].includes(symbol)) {
-            //         const res = await axios.get(`/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${apikey}`);
-            //         return { name: index, data: res.data['Global Quote'] }
-            //     }
-            //     const res = await axios.get(`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${apikey1}`);
-            //     res.data['Global Quote'] = {
-            //         "01. symbol": symbol,
-            //         "02. open": res.data.o,
-            //         "03. high": res.data.h,
-            //         "04. low": res.data.l,
-            //         "05. price": res.data.c,
-            //         "06. volume": "660",
-            //         "07. latest trading day": "",
-            //         "08. previous close": res.data.pc,
-            //         "09. change": res.data.d,
-            //         "10. change percent": res.data.dp
-            //     }
-            //     return { name: index, data: res.data['Global Quote'] }
-            // })
+            const fetchPromises = indices.map(async ({ index, symbol }, ind) => {
+                if (['XAUUSD', 'XAGUSD'].includes(symbol)) {
+                    const res = await axios.get(`/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${apikey}`);
 
-            // const results = await Promise.all(fetchPromises)
-            // setIndicesData(results);
+                    // Yeah api access limit reached.. Gareeb hai hum :)
+                    if (!res.data['Global Quote']) {
+                        console.log(`Loading test data for ${index} instead...`);
+                        return { name: index, data: testIndicesData[ind].data }
+                    }
+                    return { name: index, data: res.data['Global Quote'] }
+                }
+                const res = await axios.get(`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${apikey1}`);
+                res.data['Global Quote'] = {
+                    "01. symbol": symbol,
+                    "02. open": res.data.o,
+                    "03. high": res.data.h,
+                    "04. low": res.data.l,
+                    "05. price": res.data.c,
+                    "06. volume": "660",
+                    "07. latest trading day": "",
+                    "08. previous close": res.data.pc,
+                    "09. change": res.data.d,
+                    "10. change percent": res.data.dp
+                }
+                return { name: index, data: res.data['Global Quote'] }
+            })
+
+            const results = await Promise.all(fetchPromises)
+            setIndicesData(results);
             // console.log(results);
 
-
-            setIndicesData(testIndicesData)
+            // setIndicesData(testIndicesData)
         } catch (error) {
             console.error(error);
             setErrorMessage("Error Loading Data. Please try again later...");
@@ -120,27 +125,41 @@ const MarketsOverview = () => {
     }
 
     const fetchIndexData = async (symbol) => {
-        // setLoading(true)
+        setLoadingChart(true)
         setDataLoaded(false)
 
         try {
-            // api fetch limit will exceed for multiple request
-            // const resIntraday = await axios.get(`/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=5min&outputsize=full&apikey=${apikey}`);
-            // setIndexDataIntraday(resIntraday.data);
-            // console.log(resIntraday.data);
-            // const resDaily = await axios.get(`/query?function=TIME_SERIES_DAILY&symbol=${symbol}&outputsize=full&apikey=${apikey}`);
-            // setIndexDataDaily(resDaily.data);
-
-            setIndexDataIntraday(testSPYIntraday)
-            setIndexDataDaily(testSPYDaily)
-
             const resMarketStatus = await axios.get(`https://finnhub.io/api/v1/stock/market-status?exchange=US&token=${apikey1}`)
             setMarketStatus(resMarketStatus.data)
+
+            const resIntraday = await axios.get(`/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=5min&outputsize=full&apikey=${apikey}`);
+            // Yeah api access limit reached.. Gareeb hai hum :)
+            if (!resIntraday.data["Time Series (5min)"]) {
+                console.log(`Loading test data for ${indices[selectedIndex].index} instead...`);
+                setIndexDataIntraday(testSPYIntraday)
+                setIndexDataDaily(testSPYDaily)
+                return
+            } else {
+                setIndexDataIntraday(resIntraday.data);
+            }
+            const resDaily = await axios.get(`/query?function=TIME_SERIES_DAILY&symbol=${symbol}&outputsize=full&apikey=${apikey}`);
+            // Yeah api access limit reached.. Gareeb hai hum :)
+            if (!resDaily.data["Time Series (Daily)"]) {
+                console.log(`Loading test data for ${indices[selectedIndex].index} instead...`);
+                setIndexDataIntraday(testSPYIntraday)
+                setIndexDataDaily(testSPYDaily)
+                return
+            } else {
+                setIndexDataDaily(resDaily.data);
+            }
+
+            // setIndexDataIntraday(testSPYIntraday)
+            // setIndexDataDaily(testSPYDaily)
         } catch (error) {
             console.error(error);
             setErrorMessage("Error Loading Data. Please try again later...");
         } finally {
-            setLoading(false)
+            setLoadingChart(false)
             setDataLoaded(true)
         }
     };
@@ -186,7 +205,14 @@ const MarketsOverview = () => {
                 {/* overview of all indexes (selectable) */}
                 {
                     indicesData.map(({ name, data }, index) => (
-                        <div key={index} onClick={() => setSelectedIndex(index)} className={`flex justify-between p-1.5 text-sm cursor-pointer hover:bg-base-lighter/50 hover:rounded-lg hover:border-base hover:text-txt-depressed ${name === indices[selectedIndex].index ? 'rounded-lg bg-base-lighter' : 'border-b border-base-lighter'}`}>
+                        <div
+                            key={index}
+                            onClick={() => {
+                                if (index > 3 && selectedFrame === '1D') setSelectedFrame('1W')
+                                setSelectedIndex(index)
+                            }}
+                            className={`flex justify-between p-1.5 text-sm cursor-pointer hover:bg-base-lighter/50 hover:rounded-lg hover:border-base hover:text-txt-depressed ${name === indices[selectedIndex].index ? 'rounded-lg bg-base-lighter' : 'border-b border-base-lighter'}`}
+                        >
                             <div className='w-1/2'>
                                 <span className='font-semibold'>{name}</span>
                             </div>
@@ -218,13 +244,19 @@ const MarketsOverview = () => {
                     </div>
                 </div>
                 <div className="w-full h-auto">
-                    <LineChart data={indexData} />
+                    <LineChart data={loadingChart ? {} : indexData} />
                 </div>
                 <div className='flex justify-between text-xs border-t-2 border-base-lighter'>
                     <div className='flex space-x-2'>
                         {
                             frames.map((frame, index) => (
-                                <span key={index} onClick={() => setSelectedFrame(frame)} className={`p-1 cursor-pointer hover:text-txt transition-all ${frame === selectedFrame ? 'text-txt font-bold border-t border-accent' : 'text-txt-depressed font-semibold'}`}>{frame}</span>
+                                <span
+                                    key={index}
+                                    onClick={() => {
+                                        if (!(selectedIndex > 3 && frame === '1D')) setSelectedFrame(frame)
+                                    }}
+                                    className={`p-1 font-semibold cursor-pointer hover:text-txt hover:transition-all ${frame === selectedFrame ? 'text-txt border-t border-accent' : 'text-txt-depressed'} ${(selectedIndex > 3 && frame === '1D') ? 'cursor-not-allowed text-txt-depressed/50 hover:text-txt-depressed/50' : ''}`}
+                                >{frame}</span>
                             ))
                         }
                     </div>

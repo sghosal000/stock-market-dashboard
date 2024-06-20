@@ -11,6 +11,18 @@ For stock market data, [Alpha Vantage](alphavantage.co) API has been used
 
 ### Running Locally:
 step 1: Clone the repo  
-step 2: run **'npm i'** in CLI  
-step 3: add **VITE_API_KEY={your api key}** in **.env** file in root directory (not required while using sample data)   
-step 4: run **'npm run dev'** and follow the localhost link to run in development mode
+```bash
+git clone <repo_url>
+```
+step 2: Install Node modules  
+```bash
+npm i
+```
+step 3: Add environment variable in **.env** inside root directory (not required while using sample data)   
+```
+VITE_API_KEY={your api key}
+```
+step 4: Run the script and follow the localhost link to run in development mode
+```bash
+npm run dev
+```
